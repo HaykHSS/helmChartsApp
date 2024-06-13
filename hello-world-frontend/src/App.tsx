@@ -7,7 +7,7 @@ function App() {
   const [error, setError] = useState("");
 
   const handleGetText = () => {
-    fetch("http://localhost:3001")
+    fetch(`${import.meta.env.VITE_BACKEND_URL}`)
       .then((res) => {
         setLoading(true);
         return res.json();
@@ -27,14 +27,14 @@ function App() {
   if (loading) {
     return <p className="loading general">Loading...</p>;
   }
-  if (text) {
-    return <p className="text general">{text}</p>;
-  }
 
   return (
-    <button className="button" onClick={handleGetText}>
-      Get Text
-    </button>
+    <div className="wrapper">
+      <button className="button" onClick={handleGetText}>
+        Get Text
+      </button>
+      {text && <p className="text general">{text}</p>}
+    </div>
   );
 }
 
