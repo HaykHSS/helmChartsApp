@@ -1,0 +1,21 @@
+pipeline {
+    agent jenkins-test-agent
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    docker.build('frontend-image')
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: '', namespace: 'frontend', serverUrl: '') {
+                        sh 'helm upgrade --install frontend-chart ./frontend-chart --namespace frontend --set image.repository=frontend-image --set image.tag=latest'
+                    }
+                }
+            }
+        }
+    }
+}

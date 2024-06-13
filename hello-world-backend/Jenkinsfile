@@ -1,0 +1,21 @@
+pipeline {
+    agent jenkins-test-agent
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    docker.build('backend-image')
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: '', namespace: 'backend', serverUrl: '') {
+                        sh 'helm upgrade --install backend-chart ./backend-chart --namespace backend --set image.repository=backend-image --set image.tag=latest'
+                    }
+                }
+            }
+        }
+    }
+}
