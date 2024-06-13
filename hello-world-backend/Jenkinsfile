@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: '', namespace: 'backend', serverUrl: '') {
-                        sh 'helm install backend-chart ./backend-chart --namespace backend --set image.repository=backend-image --set image.tag=latest'
+                        sh 'helm install backend-chart ./charts/backend-chart --namespace backend --set image.repository=backend-image --set image.tag=latest'
                     }
                 }
             }
