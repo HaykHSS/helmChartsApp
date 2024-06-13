@@ -2,11 +2,11 @@ FROM node:20.14.0-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./hello-world-backend
+COPY package*.json ./hello-world-backend/
 
 RUN npm install
 
-COPY ./hello-world-backend .
+COPY ./hello-world-backend/ .
 
 RUN npm run build
 
