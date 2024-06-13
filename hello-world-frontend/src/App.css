@@ -1,0 +1,29 @@
+#root {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.general {
+  margin-top: 80px;
+  text-align: center;
+  font-size: 32px;
+}
+
+.error {
+  color: red;
+}
+
+.loading {
+  color: green;
+}
+
+.text {
+  color: blue;
+}
+
+.button {
+  font-size: 20px;
+  background-color: green;
+  border-radius: 8px;
+}
