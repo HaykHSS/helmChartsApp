@@ -5,8 +5,11 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG')]) {
-                        sh 'export KUBECONFIG=$KUBECONFIG && eval $(minikube -p minikube docker-env)'
-                        docker.build('backend-image', '-f hello-world-backend/Dockerfile .')
+                        sh '''
+                            export KUBECONFIG=$KUBECONFIG
+                            eval $(minikube -p minikube docker-env)
+                            docker build -t backend-image:latest -f hello-world-backend/Dockerfile .
+                        '''
                     }
                 }
             }
