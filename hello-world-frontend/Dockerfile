@@ -2,11 +2,11 @@ FROM node:20.14.0-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY hello-world-frontend/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY hello-world-frontend/ ./
 
 RUN npm run build
 

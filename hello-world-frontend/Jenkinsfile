@@ -4,15 +4,15 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.build('frontend-image')
+                    docker.build('frontend-image', '-f hello-world-frontend/Dockerfile .')
                 }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: '', namespace: 'frontend', serverUrl: '') {
-                        sh 'helm upgrade --install frontend-chart ./frontend-chart --namespace frontend --set image.repository=frontend-image --set image.tag=latest'
+                    withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG')]) {
+                        sh 'export KUBECONFIG=$KUBECONFIG && helm install frontend-chart ./charts/./frontend-chart --namespace frontend --set image.repository=frontend-image --set image.tag=latest'
                     }
                 }
             }
