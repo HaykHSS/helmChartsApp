@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG')]) {
-                        sh 'export KUBECONFIG=$KUBECONFIG && helm install backend-chart ./charts/backend-chart --namespace backend --set image.repository=backend-image --set image.tag=latest'
+                        sh 'export KUBECONFIG=$KUBECONFIG && helm upgrade backend-chart ./charts/backend-chart --namespace backend --set image.repository=backend-image --set image.tag=latest'
                     }
                 }
             }
