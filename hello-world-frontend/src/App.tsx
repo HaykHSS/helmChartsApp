@@ -8,7 +8,7 @@ function App() {
 
   const handleGetText = () => {
     // fetch(`${import.meta.env.VITE_BACKEND_URL}`)
-    fetch('http://backend-chart.backend.svc.cluster.local:3001')
+    fetch('/api')
       .then((res) => {
         setLoading(true);
         return res.json();

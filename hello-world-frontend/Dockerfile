@@ -18,4 +18,6 @@ RUN npm install -g serve
 
 COPY --from=builder /app/dist ./dist
 
-CMD ["serve", "-s", "dist"]
+COPY serve.json .
+
+CMD ["serve", "-l", "3000", "-c", "serve.json"]
