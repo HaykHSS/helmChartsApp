@@ -18,6 +18,6 @@ RUN npm install -g serve
 
 COPY --from=builder /app/dist ./dist
 
-COPY serve.json .
+COPY hello-world-frontend/serve.json .
 
 CMD ["serve", "-l", "3000", "-c", "serve.json"]
