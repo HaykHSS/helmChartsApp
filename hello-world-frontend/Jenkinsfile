@@ -4,7 +4,13 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.build('frontend-image', '-f hello-world-frontend/Dockerfile .')
+                    withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG')]) {
+                        sh '''
+                            export KUBECONFIG=$KUBECONFIG
+                            eval $(minikube -p minikube docker-env)
+                            docker build -t frontend-image:latest -f hello-world-frontend/Dockerfile .
+                        '''
+                    }
                 }
             }
         }
