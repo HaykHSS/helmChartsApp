@@ -1,3 +1,4 @@
+# Build stage
 FROM node:20.14.0-alpine AS builder
 
 WORKDIR /app
@@ -10,14 +11,17 @@ COPY hello-world-frontend/ ./
 
 RUN npm run build
 
-FROM node:20.14.0-alpine
+# Nginx stage
+FROM nginx:alpine
 
-WORKDIR /app
+# Copy the Nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN npm install -g serve
+# Copy the build output to the Nginx HTML directory
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-COPY --from=builder /app/dist ./dist
+# Expose port 80
+EXPOSE 80
 
-COPY hello-world-frontend/serve.json .
-
-CMD ["serve", "-l", "3000", "-c", "serve.json"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
