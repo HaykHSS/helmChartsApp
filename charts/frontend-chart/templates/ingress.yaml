@@ -49,7 +49,7 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: frontend-frontend-chart
+                name: {{ $fullName}}
                 port:
                   number: {{ $svcPort }}
               {{- else }}
