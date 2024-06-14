@@ -10,6 +10,6 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: 3001
       protocol: TCP
-      name: 3001
+      name: http
   selector:
     {{- include "backend-chart.selectorLabels" . | nindent 4 }}
