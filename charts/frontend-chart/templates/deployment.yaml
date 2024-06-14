@@ -42,7 +42,7 @@ spec:
               protocol: TCP
           env:
             - name: VITE_BACKEND_URL
-              value: "http://backend:3001"    
+              value: "http://backend-chart:3001"    
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}

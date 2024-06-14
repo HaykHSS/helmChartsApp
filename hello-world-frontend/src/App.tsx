@@ -7,7 +7,8 @@ function App() {
   const [error, setError] = useState("");
 
   const handleGetText = () => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}`)
+    // fetch(`${import.meta.env.VITE_BACKEND_URL}`)
+    fetch('http://backend-chart')
       .then((res) => {
         setLoading(true);
         return res.json();
