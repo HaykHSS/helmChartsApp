@@ -8,7 +8,7 @@ const app = express();
 
 app.use(cors());
 
-app.get("/api", (req : Request, res : Response) => {
+app.get("*", (req : Request, res : Response) => {
   const randomString = randomStrings[Math.floor(Math.random() * randomStrings.length)];
 
   res.json(randomString);
