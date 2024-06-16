@@ -4,15 +4,23 @@ WORKDIR /app
 
 COPY hello-world-frontend/package*.json ./
 
+# COPY package*.json ./
+
+
 RUN npm install
 
 COPY hello-world-frontend/ ./
+
+# COPY . .
 
 RUN npm run build
 
 FROM nginx:alpine
 
 COPY hello-world-frontend/nginx.conf /etc/nginx/nginx.conf
+
+# COPY nginx.conf /etc/nginx/nginx.conf
+
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
