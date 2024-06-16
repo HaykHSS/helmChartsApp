@@ -8,7 +8,7 @@ function App() {
 
   const handleGetText = () => {
     // fetch(`${import.meta.env.VITE_BACKEND_URL}`)
-    fetch('http:frontend.local/api')
+    fetch('http://frontend.local/api')
       .then((res) => {
         setLoading(true);
         return res.json();
