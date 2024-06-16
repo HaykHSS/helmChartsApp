@@ -42,7 +42,7 @@ spec:
               protocol: TCP
           env:
             - name: BACKEND_HOST
-              value: backend-chart.backend.svc.cluster.local:3001    
+              value: backend-chart.backend.svc.cluster.local    
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
