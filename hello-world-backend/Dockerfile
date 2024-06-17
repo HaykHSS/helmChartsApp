@@ -23,6 +23,5 @@ COPY --from=builder /app/index.js ./
 
 RUN npm install --production
 
-EXPOSE 3001
 
 CMD ["node", "index.js"]
