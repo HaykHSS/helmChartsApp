@@ -1,10 +1,10 @@
 Steps to replicate the environment on your machine
 
-1. Install docker and minikube
+1. Install docker, minikube and kubectl on your machine 
 
-2. Start minikube and enable ingress addon
+2. Start minikube (minikube start)  and enable ingress addon (minikube addons enable ingress)
 
-3. Create frontend, backend and management namespaces in cluster
+3. Create frontend, backend and management namespaces in cluster (kubectl create namespace "namespace-name")
 
 4. Install helm
 
@@ -18,6 +18,7 @@ Steps to replicate the environment on your machine
 6. Do these steps to run application on your local machine with jenkins
    - open jenkins dashboard in browser and add new node with type:permanent-agent, tag:jenkins-test-agent and configure this agent on local machine using commands which you can get in node status page after creating the node
    - optionally on linux machine you can add your agent to your system as a service  createing  this file /etc/systemd/system/jenkins-agent.service and adding this code in it:
+   
             [Unit]
             Description=Jenkins Agent
             After=network.target
@@ -25,14 +26,15 @@ Steps to replicate the environment on your machine
             [Service]
             User=username
             WorkingDirectory=/home/username/jenkins-agent
-            ExecStart=java -jar agent.jar -url http://localhost:8080/ -secret your-secret -name "name-of-your-node" -workDir "/home/username/jenkins-agent"
+            ExecStart=java -jar agent.jar -url http://localhost:8080/ -secret "your-secret" -name "name-of-your-node" -workDir "/home/username/jenkins-agent"
             restart=always
 
             [Install]
             WantedBy=multi-user.target
+
     and run it with "systemctl start jenkins-agent.service" command
 
-   - Go to manage jenkins/security and set TCP port for inbound agents to fixed and port 50000
+   - Go to manage jenkins/security and set "TCP port for inbound agents" to "fixed" and use port 50000
 
    - Go to manage jenkins/credentials and create global credentials with id:minikube-kubeconfig, kind:secret-file, scope:global, and choose file from your local machine path:/home/username/.kube/config
 
@@ -42,4 +44,4 @@ Steps to replicate the environment on your machine
 
    - Install necessary plugins in jenkins for which you'll get an error
 
-Now you're able to build the project, do builds for both jobs to have configured application on your local machine and also add in your /etc/hosts file mapping from your minikube ip (run this command to get it - minikube ip ) to "frontend.local" after which you can open application in your browser with url: http://frontend.local
+Now you're able to build the project, do builds for both jobs to have configured application on your local machine and also add in your /etc/hosts file mapping from your minikube ip (run this command to get it - "minikube ip" ) to "frontend.local" after which you can open application in your browser with url: http://frontend.local
