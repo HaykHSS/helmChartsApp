@@ -26,5 +26,4 @@ appVersion: "1.16.0"
 dependencies:
   - name: base-chart
     version: 0.1.0
-    alias: base
     repository: file://../base-chart
