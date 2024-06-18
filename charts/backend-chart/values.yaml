@@ -15,7 +15,7 @@ base-chart:
   service:
     type: ClusterIP
     port: 80
-    targetPort: 3001
+    targetPort: 80
     protocol: TCP
     name: backend-chart
     selectorLabels:
