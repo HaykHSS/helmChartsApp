@@ -17,7 +17,7 @@ Steps to replicate the environment on your machine
 
 6. Do these steps to run application on your local machine with jenkins
    - open jenkins dashboard in browser and add new node with type:permanent-agent, tag:jenkins-test-agent and configure this agent on local machine using commands which you can get in node status page after creating the node
-   - optionally on linux machine you can add your agent to your system as a service  createing  this file /etc/systemd/system/jenkins-agent.service and adding this code in it:
+   - optionally on linux machine you can add your agent to your system as a service  creating  this file /etc/systemd/system/jenkins-agent.service and adding this code in it:
    
             [Unit]
             Description=Jenkins Agent
