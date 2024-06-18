@@ -24,6 +24,9 @@ base-chart:
       app: frontend-chart
   ingress:
     enabled: true
+    hosts:
+      - host: frontend.local
+
 
 replicaCount: 1
 
