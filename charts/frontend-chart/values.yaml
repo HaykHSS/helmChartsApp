@@ -6,7 +6,7 @@ base-chart:
   global:
     fullnameOverride: frontend
   envVarName: BACKEND_HOST
-  envVarValue: backend-chart.backend.svc.cluster.local
+  envVarValue: backend-service.backend.svc.cluster.local
   nameOverride: frontend-chart
   chartVersion: 0.1.0
   image:
