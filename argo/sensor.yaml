@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: build-and-sync-sensor
+spec:
+  template:
+    serviceAccountName: argo-events-sa
+  dependencies:
+  - name: payload
+    eventSourceName: webhook
+    eventName: for-testing
+
+  triggers:
+  - template:
+      name: build-and-sync
+      argoWorkflow:
+        group: argoproj.io
+        version: v1alpha1
+        resource: workflows
+        operation: submit
+        source:
+          resource:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              name: build-and-sync-workflow
