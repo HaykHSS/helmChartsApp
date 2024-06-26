@@ -8,7 +8,7 @@ base-chart:
   nameOverride: backend-chart
   chartVersion: 0.1.0
   image:
-    repository: backend-image
+    repository: haykhs/backend-image
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "latest"
