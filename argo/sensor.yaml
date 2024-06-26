@@ -2,25 +2,72 @@ apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
   name: build-and-sync-sensor
+  namespace: argo-events
 spec:
   template:
-    serviceAccountName: argo-events-sa
+    serviceAccountName: operate-workflow-sa
   dependencies:
-  - name: payload
-    eventSourceName: webhook
-    eventName: for-testing
-
+    - name: payload
+      eventSourceName: webhook
+      eventName: for-testing
   triggers:
-  - template:
-      name: build-and-sync
-      argoWorkflow:
-        group: argoproj.io
-        version: v1alpha1
-        resource: workflows
-        operation: submit
-        source:
-          resource:
-            apiVersion: argoproj.io/v1alpha1
-            kind: Workflow
-            metadata:
-              name: build-and-sync-workflow
+    - template:
+        name: build-and-sync-template
+        argoWorkflow:
+          group: argoproj.io
+          version: v1alpha1
+          resource: workflows
+          operation: submit
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: build-and-sync-
+                namespace: argo
+              spec:
+                entrypoint: build-and-sync
+                volumes:
+                  - name: workdir
+                    emptyDir: {}
+                  - name: docker-config
+                    secret:
+                      secretName: kaniko-docker-config
+                templates:
+                  - name: build-and-sync
+                    steps:
+                      - - name: build-image
+                          template: build-image
+                      - - name: trigger-argocd-sync
+                          template: trigger-argocd-sync
+
+                  - name: build-image
+                    container:
+                      image: gcr.io/kaniko-project/executor:latest
+                      args:
+                        - "--dockerfile=helmChartsApp-main/hello-world-backend/Dockerfile"
+                        - "--context=https://github.com/HaykHSS/helmChartsApp/archive/refs/heads/main.tar.gz"
+                        - "--destination=haykhs/backend-image:latest"
+                        - "--insecure"
+                      volumeMounts:
+                        - name: workdir
+                          mountPath: /mnt/data
+                        - name: docker-config
+                          mountPath: /kaniko/.docker
+
+                  - name: trigger-argocd-sync
+                    container:
+                      image: argoproj/argocd:v2.3.7
+                      command: [sh, -c]
+                      args:
+                        - |
+                          argocd app sync my-app --server argocd-server.argocd.svc.cluster.local:443 --auth-token $ARGOCD_AUTH_TOKEN --insecure
+                      env:
+                        - name: ARGOCD_AUTH_TOKEN
+                          valueFrom:
+                            secretKeyRef:
+                              name: argocd-secret
+                              key: admin.password
+                      volumeMounts:
+                        - name: workdir
+                          mountPath: /mnt/data

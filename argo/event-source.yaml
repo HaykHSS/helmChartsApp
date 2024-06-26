@@ -9,6 +9,6 @@ spec:
         targetPort: 12000
   webhook:
     for-testing:
-      port: "12000"
+      port: 12000
       endpoint: /for-testing
       method: POST
