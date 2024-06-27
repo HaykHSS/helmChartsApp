@@ -38,7 +38,7 @@ Steps to replicate the environment on your machine
 
    - Go to manage jenkins/credentials and create global credentials with id:minikube-kubeconfig, kind:secret-file, scope:global, and choose file from your local machine path:/home/username/.kube/config
 
-   - Create new item, name:frontend, type:pipeline, optionally set build trigger:poll scm with value H/5 * * * * to poll scm for changes every 5 minutes, for Pipeline definition select pipeline script from scm , as scm select Git and set url to https://github.com/HaykHSS/helmChartsApp, you don't need to specify credentials for public repo, change branch specifier to */main, and set script path:hello-world-frontend/Jenkinsfile
+   - Create new item,  name:frontend, type:pipeline, optionally set build trigger:poll scm with value H/5 * * * * to poll scm for changes every 5 minutes, for Pipeline definition select pipeline script from scm , as scm select Git and set url to https://github.com/HaykHSS/helmChartsApp, you don't need to specify credentials for public repo, change branch specifier to */main, and set script path:hello-world-frontend/Jenkinsfile
 
    - Create another item with name:backend and set all options the same as above only for script path set:hello-world-backend/Jenkinsfile
 
