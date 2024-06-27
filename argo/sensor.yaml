@@ -33,21 +33,64 @@ spec:
                   - name: docker-config
                     secret:
                       secretName: kaniko-docker-config
+                  - name: argocd-secret
+                    secret:
+                      secretName: argocd-secret
                 templates:
                   - name: build-and-sync
                     steps:
-                      - - name: build-image
-                          template: build-image
-                      - - name: trigger-argocd-sync
-                          template: trigger-argocd-sync
+                      - - name: extract-and-increment-tag
+                          template: extract-and-increment-tag
+                      - - name: build-and-push-image
+                          template: build-and-push-image
+                          arguments:
+                            parameters:
+                              - name: new_tag
+                                value: "{{steps.extract-and-increment-tag.outputs.parameters.new_tag}}"
+                      - - name: update-argocd-application
+                          template: update-argocd-application
+                          arguments:
+                            parameters:
+                              - name: new_tag
+                                value: "{{steps.extract-and-increment-tag.outputs.parameters.new_tag}}"
 
-                  - name: build-image
+                  - name: extract-and-increment-tag
+                    container:
+                      image: alpine:3.14
+                      command: [sh, -c]
+                      args: [
+                        "apk --no-cache add curl jq && \
+                        CURRENT_TAG=$(curl -s 'https://hub.docker.com/v2/repositories/haykhs/backend-image/tags/' | jq -r '.results[].name' | sort -V | tail -n 1) && \
+                        if echo \"$CURRENT_TAG\" | grep -qE '^[0-9]+\\.[0-9]+\\.[0-9]+$'; then \
+                        major=$(echo $CURRENT_TAG | cut -d. -f1); \
+                        minor=$(echo $CURRENT_TAG | cut -d. -f2); \
+                        patch=$(echo $CURRENT_TAG | cut -d. -f3); \
+                        NEW_TAG=\"$major.$minor.$((patch + 1))\"; \
+                        else \
+                        NEW_TAG='1.0.0'; \
+                        fi && \
+                        echo \"new_tag=$NEW_TAG\" && \
+                        echo \"$NEW_TAG\" > /mnt/data/tag.env "
+                      ]
+                      volumeMounts:
+                        - name: workdir
+                          mountPath: /mnt/data
+                    outputs:
+                      parameters:
+                        - name: new_tag
+                          valueFrom:
+                            path: /mnt/data/tag.env
+
+                  - name: build-and-push-image
+                    inputs:
+                      parameters:
+                        - name: new_tag
                     container:
                       image: gcr.io/kaniko-project/executor:latest
                       args:
                         - "--dockerfile=helmChartsApp-main/hello-world-backend/Dockerfile"
                         - "--context=https://github.com/HaykHSS/helmChartsApp/archive/refs/heads/main.tar.gz"
-                        - "--destination=haykhs/backend-image:latest"
+                        - "--destination=haykhs/backend-image:{{inputs.parameters.new_tag}}"
                         - "--insecure"
                       volumeMounts:
                         - name: workdir
@@ -55,19 +98,25 @@ spec:
                         - name: docker-config
                           mountPath: /kaniko/.docker
 
-                  - name: trigger-argocd-sync
+                  - name: update-argocd-application
+                    inputs:
+                      parameters:
+                        - name: new_tag
                     container:
-                      image: argoproj/argocd:v2.3.7
+                      image: argoproj/argocd:latest
                       command: [sh, -c]
-                      args:
-                        - |
-                          argocd app sync my-app --server argocd-server.argocd.svc.cluster.local:443 --auth-token $ARGOCD_AUTH_TOKEN --insecure
+                      args: [
+                         "argocd login $ARGOCD_SERVER --username admin --password $ARGOCD_PASSWORD --insecure && \
+                         argocd app set my-app -p base-chart.image.tag={{inputs.parameters.new_tag}} --insecure"
+                      ]
                       env:
-                        - name: ARGOCD_AUTH_TOKEN
+                        - name: ARGOCD_SERVER
+                          value: argocd-server.argocd.svc.cluster.local:443
+                        - name: ARGOCD_OPTS
+                          value: '--grpc-web'
+                        - name: ARGOCD_PASSWORD
                           valueFrom:
                             secretKeyRef:
                               name: argocd-secret
                               key: admin.password
-                      volumeMounts:
-                        - name: workdir
-                          mountPath: /mnt/data
+

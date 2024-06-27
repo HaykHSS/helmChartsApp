@@ -24,7 +24,7 @@ COPY hello-world-frontend/nginx.conf /etc/nginx/templates/nginx.conf.template
 
 # COPY hello-world-frontend/nginx.conf /etc/nginx/nginx.conf
 
-# COPY nginx.conf /etc/nginx/nginx.conf
+# COPY nginx.conf /etc/nginx/templates/nginx.conf.template
 
 
 COPY --from=builder /app/dist /usr/share/nginx/html
