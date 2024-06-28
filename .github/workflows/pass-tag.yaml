@@ -26,4 +26,4 @@ jobs:
                 "pusher": "${{ github.actor }}",
                 "tag": "${{ github.event.inputs.tag }}",
               }' \
-          https://291f-2a00-cc47-3a0d-5000-1bd7-3184-8b69-6b58.ngrok-free.app/for-testing
+          https://f125-178-160-199-194.ngrok-free.app/for-testing
