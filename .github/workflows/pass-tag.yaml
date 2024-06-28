@@ -1,0 +1,29 @@
+name: Send Custom Webhook Payload with Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag value to include in the payload'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  send-custom-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+      
+      - name: Send custom webhook payload
+        run: |
+          curl -X POST \
+          -H "Content-Type: application/json" \
+          -H "X-GitHub-Event: push" \
+          -d '{
+                "ref": "${{ github.ref }}",
+                "repository": "${{ github.repository }}",
+                "pusher": "${{ github.actor }}",
+                "tag": "${{ github.event.inputs.tag }}",
+              }' \
+          https://291f-2a00-cc47-3a0d-5000-1bd7-3184-8b69-6b58.ngrok-free.app/for-testing
