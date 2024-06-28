@@ -9,8 +9,6 @@ spec:
     repoURL: 'https://github.com/HaykHSS/helmChartsApp.git'
     targetRevision: HEAD
     path: charts/backend-chart
-    directory:
-      recurse: true
     helm:
       parameters:
         - name: base-chart.image.tag
