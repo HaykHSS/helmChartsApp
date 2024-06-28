@@ -10,10 +10,9 @@ spec:
     targetRevision: HEAD
     path: charts/backend-chart
     helm:
-      values: |
-        base-chart:
-          image:
-            tag: "1.0.0"
+      parameters:
+        - name: base-chart.image.tag
+          value: "1.0.0"
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: backend
