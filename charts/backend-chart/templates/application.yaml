@@ -12,7 +12,7 @@ spec:
     helm:
       parameters:
         - name: base-chart.image.tag
-          value: "1.0.18"
+          value: "1.0.19"
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: backend
@@ -21,4 +21,4 @@ spec:
       - CreateNamespace=true
     automated:
       prune: true
-      selfHeal: true
+      selfHeal: false
