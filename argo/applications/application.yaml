@@ -12,7 +12,7 @@ spec:
     helm:
       parameters:
         - name: base-chart.image.tag
-          value: "1.0.12"
+          value: "1.0.13"
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: backend
