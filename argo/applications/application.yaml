@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/HaykHSS/helmChartsApp.git'
     targetRevision: HEAD
-    path: charts/outer
+    path: charts/backend-chart
     helm:
       parameters:
         - name: base-chart.image.tag
