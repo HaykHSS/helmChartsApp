@@ -79,12 +79,14 @@ spec:
                       command: [sh, -c]
                       args: [
                         "apk --no-cache add git && \
+                        git config --global user.email 'hayk.sargsyan.2015@gmail.com' && \
+                        git config --global user.name ${GIT_USERNAME} && \
                         git clone https://github.com/HaykHSS/helmChartsApp repo && \
                         cd repo && \
-                        sed -i 's/tag: .*/tag: {{inputs.parameters.tag}}/' argo/applications/application.yaml && \
+                        sed -i '/base-chart.image.tag/{n;s/value: \".*\"/value: \"{{inputs.parameters.tag}}\"/}' argo/applications/application.yaml && \
                         git add argo/applications/application.yaml && \
                         git commit -m 'Update tag to {{inputs.parameters.tag}}' && \
-                        git push https://${GIT_USERNAME}:${GIT_TOKEN}@https://github.com/HaykHSS/helmChartsApp"
+                        git push https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/HaykHSS/helmChartsApp",
                       ]
                       env:
                         - name: GIT_USERNAME
