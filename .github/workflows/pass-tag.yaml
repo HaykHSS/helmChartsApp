@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag value to include in the payload'
+        description: "Tag value to include in the payload"
         required: true
-        default: 'v1.0.0'
+        default: "v1.0.0"
 
 jobs:
   send-custom-webhook:
@@ -14,16 +14,18 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
-      
+
+      - name: Print debug information
+        run: |
+          echo "Ref: ${{ github.ref }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Pusher: ${{ github.actor }}"
+          echo "Tag: ${{ github.event.inputs.tag }}"
+
       - name: Send custom webhook payload
         run: |
           curl -X POST \
           -H "Content-Type: application/json" \
           -H "X-GitHub-Event: push" \
-          -d '{
-                "ref": "${{ github.ref }}",
-                "repository": "${{ github.repository }}",
-                "pusher": "${{ github.actor }}",
-                "tag": "${{ github.event.inputs.tag }}",
-              }' \
+          -d "{\"ref\": \"${{ github.ref }}\", \"repository\": \"${{ github.repository }}\", \"pusher\": \"${{ github.actor }}\", \"tag\": \"${{ github.event.inputs.tag }}\"}" \
           https://f125-178-160-199-194.ngrok-free.app/for-testing
