@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/HaykHSS/helmChartsApp.git'
     targetRevision: HEAD
-    chart: charts/backend-chart
+    path: charts/backend-chart
     helm:
       parameters:
         - name: base-chart.image.tag
@@ -20,5 +20,5 @@ spec:
     syncOptions:
       - CreateNamespace=true
     automated:
-      prune: false
-      selfHeal: false
+      prune: true
+      selfHeal: true
