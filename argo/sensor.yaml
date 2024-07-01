@@ -83,8 +83,8 @@ spec:
                         git config --global user.name ${GIT_USERNAME} && \
                         git clone https://github.com/HaykHSS/helmChartsApp repo && \
                         cd repo && \
-                        sed -i '/base-chart.image.tag/{n;s/value: \".*\"/value: \"{{inputs.parameters.tag}}\"/}' argo/applications/application.yaml && \
-                        git add argo/applications/application.yaml && \
+                        sed -i '/base-chart.image.tag/{n;s/value: \".*\"/value: \"{{inputs.parameters.tag}}\"/}' charts/backend-chart/templates/application.yaml && \
+                        git add charts/backend-chart/templates/application.yaml && \
                         git commit -m 'Update tag to {{inputs.parameters.tag}}' && \
                         git push https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/HaykHSS/helmChartsApp",
                       ]
